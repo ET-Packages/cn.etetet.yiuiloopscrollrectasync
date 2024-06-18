@@ -126,14 +126,14 @@ namespace ET.Client
             }
 
             var uiBase = (TItemRenderer)result;
-            AddItemRendererByDic(uiBase.GetParent<YIUIComponent>().OwnerRectTransform, uiBase);
+            AddItemRendererByDic(uiBase.GetParent<YIUIChild>().OwnerRectTransform, uiBase);
             return AddOnClickEvent(uiBase);
         }
 
         public async ETTask<GameObject> GetObject(int index)
         {
             var uiBase = await m_UIBasePool.Get();
-            return uiBase.GetParent<YIUIComponent>().OwnerGameObject;
+            return uiBase.GetParent<YIUIChild>().OwnerGameObject;
         }
 
         public void ReturnObject(Transform transform)

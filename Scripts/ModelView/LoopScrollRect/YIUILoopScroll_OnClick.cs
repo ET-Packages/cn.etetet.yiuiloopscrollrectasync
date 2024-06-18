@@ -178,7 +178,7 @@ namespace ET.Client
         {
             if (!m_OnClickInit) return uiBase;
 
-            var eventTable = uiBase.GetParent<YIUIComponent>().EventTable;
+            var eventTable = uiBase.GetParent<YIUIChild>().EventTable;
             if (eventTable == null)
             {
                 Debug.LogError($"目标item 没有 event表 请检查");

@@ -48,7 +48,7 @@ namespace ET.Client
         //如果 < 0 则表示这个对象在对象池里
         public int GetItemIndex(TItemRenderer item)
         {
-            return GetItemIndex(item.GetParent<YIUIComponent>().OwnerRectTransform);
+            return GetItemIndex(item.GetParent<YIUIChild>().OwnerRectTransform);
         }
 
         //只能获取当前可见的对象
