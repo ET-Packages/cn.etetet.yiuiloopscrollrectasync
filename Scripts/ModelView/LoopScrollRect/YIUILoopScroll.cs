@@ -30,10 +30,10 @@ namespace ET.Client
         private YIUIBindVo       m_BindVo;
         private IList<TData>     m_Data;
 
-        private LoopScrollRect                       m_Owner;
-        private ObjAsyncCache<TItemRenderer>         m_UIBasePool;
-        private Dictionary<Transform, TItemRenderer> m_ItemTransformDic      = new Dictionary<Transform, TItemRenderer>();
-        private Dictionary<Transform, int>           m_ItemTransformIndexDic = new Dictionary<Transform, int>();
+        private LoopScrollRect                                  m_Owner;
+        private ObjAsyncCache<EntityRef<TItemRenderer>>         m_UIBasePool;
+        private Dictionary<Transform, EntityRef<TItemRenderer>> m_ItemTransformDic      = new();
+        private Dictionary<Transform, int>                      m_ItemTransformIndexDic = new();
 
         private YIUIInvokeLoadInstantiateByVo m_InvokeLoadInstantiate;
 
@@ -47,7 +47,7 @@ namespace ET.Client
             m_ItemTransformIndexDic.Clear();
             m_BindVo                = data.Value;
             m_ItemRenderer          = itemRenderer;
-            m_UIBasePool            = new ObjAsyncCache<TItemRenderer>(OnCreateItemRenderer);
+            m_UIBasePool            = new(OnCreateItemRenderer);
             m_OwnerEntity           = ownerEneity;
             m_Owner                 = owner;
             m_Owner.prefabSource    = this;
@@ -82,13 +82,13 @@ namespace ET.Client
             for (var i = 0; i < count; i++)
             {
                 var child = Content.GetChild(0);
-                UnityObject.DestroyImmediate(child.gameObject);
+                child.gameObject.SafeDestroySelf();
             }
         }
 
         private TItemRenderer GetItemRendererByDic(Transform tsf)
         {
-            if (m_ItemTransformDic.TryGetValue(tsf, out var value))
+            if (m_ItemTransformDic.TryGetValue(tsf, out EntityRef<TItemRenderer> value))
             {
                 return value;
             }
@@ -116,7 +116,7 @@ namespace ET.Client
 
         #region LoopScrollRect Interface
 
-        private async ETTask<TItemRenderer> OnCreateItemRenderer()
+        private async ETTask<EntityRef<TItemRenderer>> OnCreateItemRenderer()
         {
             var result = await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeLoadInstantiateByVo, ETTask<Entity>>(m_InvokeLoadInstantiate);
             if (result == null)
@@ -127,13 +127,14 @@ namespace ET.Client
 
             var uiBase = (TItemRenderer)result;
             AddItemRendererByDic(uiBase.GetParent<YIUIChild>().OwnerRectTransform, uiBase);
-            return AddOnClickEvent(uiBase);
+            AddOnClickEvent(uiBase);
+            return uiBase;
         }
 
         public async ETTask<GameObject> GetObject(int index)
         {
             var uiBase = await m_UIBasePool.Get();
-            return uiBase.GetParent<YIUIChild>().OwnerGameObject;
+            return ((Entity)uiBase)?.GetParent<YIUIChild>()?.OwnerGameObject;
         }
 
         public void ReturnObject(Transform transform)

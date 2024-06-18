@@ -15,14 +15,14 @@ namespace ET.Client
         /// </summary>
         public delegate void OnClickItemEvent(int index, TData data, TItemRenderer item, bool select);
 
-        private bool             m_OnClickInit;                             //是否已初始化
-        private string           m_ItemClickEventName;                      //ui中的点击UIEventP0
-        private OnClickItemEvent m_OnClickItemEvent;                        //点击回调
-        private Queue<int>       m_OnClickItemQueue   = new Queue<int>();   //当前所有已选择 遵循先进先出 有序
-        private HashSet<int>     m_OnClickItemHashSet = new HashSet<int>(); //当前所有已选择 无序 为了更快查找
-        private int              m_MaxClickCount      = 1;                  //可选最大数量 >=2 就是复选 最小1
-        private bool             m_RepetitionCancel   = true;               //重复选择 则取消选择
-        private bool             m_AutoCancelLast     = true;               //当选择操作最大数量过后 自动取消第一个选择的 否则选择无效
+        private bool             m_OnClickInit;                //是否已初始化
+        private string           m_ItemClickEventName;         //ui中的点击UIEventP0
+        private OnClickItemEvent m_OnClickItemEvent;           //点击回调
+        private Queue<int>       m_OnClickItemQueue   = new(); //当前所有已选择 遵循先进先出 有序
+        private HashSet<int>     m_OnClickItemHashSet = new(); //当前所有已选择 无序 为了更快查找
+        private int              m_MaxClickCount      = 1;     //可选最大数量 >=2 就是复选 最小1
+        private bool             m_RepetitionCancel   = true;  //重复选择 则取消选择
+        private bool             m_AutoCancelLast     = true;  //当选择操作最大数量过后 自动取消第一个选择的 否则选择无效
 
         public YIUILoopScroll<TData, TItemRenderer> SetOnClickInfo(
         string           itemClickEventName,
@@ -174,15 +174,15 @@ namespace ET.Client
             m_OnClickItemEvent?.Invoke(index, m_Data[index], item, select);
         }
 
-        private TItemRenderer AddOnClickEvent(TItemRenderer uiBase)
+        private void AddOnClickEvent(TItemRenderer uiBase)
         {
-            if (!m_OnClickInit) return uiBase;
+            if (!m_OnClickInit) return;
 
             var eventTable = uiBase.GetParent<YIUIChild>().EventTable;
             if (eventTable == null)
             {
                 Debug.LogError($"目标item 没有 event表 请检查");
-                return uiBase;
+                return;
             }
 
             var uEventClickItem = eventTable.FindEvent<UIEventP0>(m_ItemClickEventName);
@@ -194,8 +194,6 @@ namespace ET.Client
             {
                 uEventClickItem.Add(() => { OnClickItem(uiBase); });
             }
-
-            return uiBase;
         }
 
         private void OnClickItemQueuePeek()
