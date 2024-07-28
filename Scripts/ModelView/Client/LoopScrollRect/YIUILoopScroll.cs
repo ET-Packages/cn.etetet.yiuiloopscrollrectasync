@@ -8,13 +8,15 @@ using System.Collections.Generic;
 using YIUIFramework;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityObject = UnityEngine.Object;
 
 namespace ET.Client
 {
+    /// <summary>
+    /// 文档: https://lib9kmxvq7k.feishu.cn/wiki/HPbwwkhsKi9aDik5VEXcqPhDnIh
+    /// </summary>
     [EnableClass]
     public partial class YIUILoopScroll<TData, TItemRenderer> : LoopScrollPrefabAsyncSource, LoopScrollDataSource
-            where TItemRenderer : Entity, IYIUIBind, IYIUIInitialize
+    where TItemRenderer : Entity, IYIUIBind, IYIUIInitialize
     {
         /// <summary>
         /// 列表项渲染器

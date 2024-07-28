@@ -6,6 +6,12 @@ namespace YIUIFramework.Editor
 {
     internal static class YIUILoopScrollMenuItem
     {
+        [MenuItem("GameObject/YIUI/LoopScroll/文档", false, 10000)]
+        private static void LoopScrollOpenDocument()
+        {
+            Application.OpenURL("https://lib9kmxvq7k.feishu.cn/wiki/HPbwwkhsKi9aDik5VEXcqPhDnIh");
+        }
+
         [MenuItem("GameObject/YIUI/LoopScroll/Horizontal", false, 10001)]
         private static void CreateLoopScrollHorizontal()
         {
