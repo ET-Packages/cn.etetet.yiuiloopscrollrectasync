@@ -4,6 +4,7 @@
 // Data: 2023年2月12日
 //------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using YIUIFramework;
 using UnityEngine;
@@ -15,48 +16,53 @@ namespace ET.Client
     /// 文档: https://lib9kmxvq7k.feishu.cn/wiki/HPbwwkhsKi9aDik5VEXcqPhDnIh
     /// </summary>
     [EnableClass]
-    public partial class YIUILoopScroll<TData, TItemRenderer> : LoopScrollPrefabAsyncSource, LoopScrollDataSource
-    where TItemRenderer : Entity, IYIUIBind, IYIUIInitialize
+    public partial class YIUILoopScroll<TData> : LoopScrollPrefabAsyncSource, LoopScrollDataSource
     {
-        /// <summary>
-        /// 列表项渲染器
-        /// </summary>
-        /// <param name="index">数据的索引</param>
-        /// <param name="data">数据项</param>
-        /// <param name="item">显示对象</param>
-        /// <param name="select">是否被选中</param>
-        public delegate void ListItemRenderer(int index, TData data, TItemRenderer item, bool select);
+        private EntityRef<Entity> m_OwnerEntity;
 
-        private Entity           m_OwnerEntity;
-        private ListItemRenderer m_ItemRenderer;
-        private YIUIBindVo       m_BindVo;
-        private IList<TData>     m_Data;
+        public Entity OwnerEntity => m_OwnerEntity;
 
-        private LoopScrollRect                                  m_Owner;
-        private ObjAsyncCache<EntityRef<TItemRenderer>>         m_UIBasePool;
-        private Dictionary<Transform, EntityRef<TItemRenderer>> m_ItemTransformDic      = new();
-        private Dictionary<Transform, int>                      m_ItemTransformIndexDic = new();
+        private YIUIBindVo   m_BindVo;
+        private IList<TData> m_Data;
+
+        private LoopScrollRect                           m_Owner;
+        private ObjAsyncCache<EntityRef<Entity>>         m_ItemPool;
+        private Dictionary<Transform, EntityRef<Entity>> m_ItemTransformDic      = new();
+        private Dictionary<Transform, int>               m_ItemTransformIndexDic = new();
 
         private YIUIInvokeLoadInstantiateByVo m_InvokeLoadInstantiate;
 
-        public YIUILoopScroll(Entity           ownerEneity,
-                              LoopScrollRect   owner,
-                              ListItemRenderer itemRenderer)
+        public YIUILoopScroll(Entity ownerEneity, LoopScrollRect owner, Type itemType)
         {
-            var data = YIUIBindHelper.GetBindVoByType<TItemRenderer>();
+            Initialize(ownerEneity, owner, itemType);
+        }
+
+        public YIUILoopScroll(Entity ownerEneity, LoopScrollRect owner, Type itemType, string itemClickEventName)
+        {
+            Initialize(ownerEneity, owner, itemType);
+            SetOnClick(itemClickEventName);
+        }
+
+        private void Initialize(Entity ownerEneity, LoopScrollRect owner, Type itemType)
+        {
+            var data = YIUIBindHelper.GetBindVoByType(itemType);
             if (data == null) return;
             m_ItemTransformDic.Clear();
             m_ItemTransformIndexDic.Clear();
-            m_BindVo                = data.Value;
-            m_ItemRenderer          = itemRenderer;
-            m_UIBasePool            = new(OnCreateItemRenderer);
-            m_OwnerEntity           = ownerEneity;
-            m_Owner                 = owner;
-            m_Owner.prefabSource    = this;
-            m_Owner.dataSource      = this;
-            m_InvokeLoadInstantiate = new YIUIInvokeLoadInstantiateByVo { BindVo = m_BindVo, ParentEntity = m_OwnerEntity };
-            InitCacheParent();
+            m_BindVo             = data.Value;
+            m_ItemPool           = new(OnCreateItemRenderer);
+            m_OwnerEntity        = ownerEneity;
+            m_Owner              = owner;
+            m_Owner.prefabSource = this;
+            m_Owner.dataSource   = this;
             InitClearContent();
+            InitCacheParent();
+            m_InvokeLoadInstantiate = new YIUIInvokeLoadInstantiateByVo
+            {
+                BindVo          = m_BindVo,
+                ParentEntity    = m_OwnerEntity,
+                ParentTransform = CacheRect,
+            };
         }
 
         #region Private
@@ -88,9 +94,9 @@ namespace ET.Client
             }
         }
 
-        private TItemRenderer GetItemRendererByDic(Transform tsf)
+        private Entity GetItemRendererByDic(Transform tsf)
         {
-            if (m_ItemTransformDic.TryGetValue(tsf, out EntityRef<TItemRenderer> value))
+            if (m_ItemTransformDic.TryGetValue(tsf, out EntityRef<Entity> value))
             {
                 return value;
             }
@@ -99,7 +105,7 @@ namespace ET.Client
             return null;
         }
 
-        private void AddItemRendererByDic(Transform tsf, TItemRenderer item)
+        private void AddItemRendererByDic(Transform tsf, Entity item)
         {
             m_ItemTransformDic.TryAdd(tsf, item);
         }
@@ -118,41 +124,41 @@ namespace ET.Client
 
         #region LoopScrollRect Interface
 
-        private async ETTask<EntityRef<TItemRenderer>> OnCreateItemRenderer()
+        private async ETTask<EntityRef<Entity>> OnCreateItemRenderer()
         {
-            var result = await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeLoadInstantiateByVo, ETTask<Entity>>(m_InvokeLoadInstantiate);
-            if (result == null)
+            var item = await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeLoadInstantiateByVo, ETTask<Entity>>(m_InvokeLoadInstantiate);
+            if (item == null)
             {
                 Log.Error($"YIUILoopScroll 实例化失败 请检查 {m_BindVo.PkgName} {m_BindVo.ResName}");
                 return null;
             }
 
-            var uiBase = (TItemRenderer)result;
-            AddItemRendererByDic(uiBase.GetParent<YIUIChild>().OwnerRectTransform, uiBase);
-            AddOnClickEvent(uiBase);
-            return uiBase;
+            AddItemRendererByDic(item.GetParent<YIUIChild>().OwnerRectTransform, item);
+            AddOnClickEvent(item);
+            return item;
         }
 
         public async ETTask<GameObject> GetObject(int index)
         {
-            var uiBase = await m_UIBasePool.Get();
-            return ((Entity)uiBase)?.GetParent<YIUIChild>()?.OwnerGameObject;
+            var item = await m_ItemPool.Get();
+            return ((Entity)item)?.GetParent<YIUIChild>()?.OwnerGameObject;
         }
 
         public void ReturnObject(Transform transform)
         {
-            var uiBase = GetItemRendererByDic(transform);
-            if (uiBase == null) return;
-            m_UIBasePool.Put(uiBase);
+            var item = GetItemRendererByDic(transform);
+            if (item == null) return;
+            m_ItemPool.Put(item);
             ResetItemIndex(transform, -1);
             transform.SetParent(m_Owner.u_CacheRect, false);
         }
 
         public void ProvideData(Transform transform, int index)
         {
-            var uiBase = GetItemRendererByDic(transform);
-            if (uiBase == null) return;
+            var item = GetItemRendererByDic(transform);
+            if (item == null) return;
             ResetItemIndex(transform, index);
+
             var select = m_OnClickItemHashSet.Contains(index);
             if (m_Data == null)
             {
@@ -160,7 +166,7 @@ namespace ET.Client
                 return;
             }
 
-            m_ItemRenderer?.Invoke(index, m_Data[index], uiBase, select);
+            YIUILoopWatcher.Instance.Renderer(OwnerEntity, index, m_Data[index], item, select);
         }
 
         #endregion

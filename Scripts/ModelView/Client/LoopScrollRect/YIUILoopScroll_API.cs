@@ -7,7 +7,7 @@ namespace ET.Client
     /// <summary>
     /// 对外可调用API
     /// </summary>
-    public partial class YIUILoopScroll<TData, TItemRenderer>
+    public partial class YIUILoopScroll<TData>
     {
         //设置数据 然后刷新
         //不管是要修改数据长度 还是数据变更了 都用此方法刷新
@@ -46,13 +46,13 @@ namespace ET.Client
         }
 
         //如果 < 0 则表示这个对象在对象池里
-        public int GetItemIndex(TItemRenderer item)
+        public int GetItemIndex(Entity item)
         {
             return GetItemIndex(item.GetParent<YIUIChild>().OwnerRectTransform);
         }
 
         //只能获取当前可见的对象
-        public TItemRenderer GetItemByIndex(int index, bool log = true)
+        public Entity GetItemByIndex(int index, bool log = true)
         {
             if (index < ItemStart || index >= ItemEnd) return null;
             var childIndex = index - ItemStart;
@@ -67,12 +67,12 @@ namespace ET.Client
             }
 
             var transform = Content.GetChild(childIndex);
-            var uiBase    = GetItemRendererByDic(transform);
-            return uiBase;
+            var item    = GetItemRendererByDic(transform);
+            return item;
         }
 
         //判断某个对象是否被选中
-        public bool IsSelect(TItemRenderer item)
+        public bool IsSelect(Entity item)
         {
             return m_OnClickItemHashSet.Contains(GetItemIndex(item));
         }
@@ -99,9 +99,9 @@ namespace ET.Client
         }
 
         //只能得到当前可见的 不可见的拿不到
-        public List<TItemRenderer> GetSelectItem()
+        public List<Entity> GetSelectItem()
         {
-            var selectList = new List<TItemRenderer>();
+            var selectList = new List<Entity>();
             foreach (var index in GetSelectIndex())
             {
                 var item = GetItemByIndex(index);

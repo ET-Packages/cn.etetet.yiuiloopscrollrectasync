@@ -8,25 +8,17 @@ namespace ET.Client
     /// <summary>
     /// 额外点击相关
     /// </summary>
-    public partial class YIUILoopScroll<TData, TItemRenderer>
+    public partial class YIUILoopScroll<TData>
     {
-        /// <summary>
-        /// 列表元素被点击的事件
-        /// </summary>
-        public delegate void OnClickItemEvent(int index, TData data, TItemRenderer item, bool select);
-
         private bool             m_OnClickInit;                //是否已初始化
         private string           m_ItemClickEventName;         //ui中的点击UIEventP0
-        private OnClickItemEvent m_OnClickItemEvent;           //点击回调
         private Queue<int>       m_OnClickItemQueue   = new(); //当前所有已选择 遵循先进先出 有序
         private HashSet<int>     m_OnClickItemHashSet = new(); //当前所有已选择 无序 为了更快查找
         private int              m_MaxClickCount      = 1;     //可选最大数量 >=2 就是复选 最小1
         private bool             m_RepetitionCancel   = true;  //重复选择 则取消选择
         private bool             m_AutoCancelLast     = true;  //当选择操作最大数量过后 自动取消第一个选择的 否则选择无效
 
-        public YIUILoopScroll<TData, TItemRenderer> SetOnClickInfo(
-        string           itemClickEventName,
-        OnClickItemEvent onClickItemEvent)
+        public YIUILoopScroll<TData> SetOnClick(string itemClickEventName)
         {
             if (m_OnClickInit)
             {
@@ -39,16 +31,9 @@ namespace ET.Client
                 Debug.LogError($"必须有事件名称");
                 return this;
             }
-
-            if (onClickItemEvent == null)
-            {
-                Debug.LogError($"必须有点击事件");
-                return this;
-            }
-
+            
             m_MaxClickCount      = Mathf.Max(1, m_Owner.u_MaxClickCount);
             m_ItemClickEventName = itemClickEventName;
-            m_OnClickItemEvent   = onClickItemEvent;
             m_RepetitionCancel   = m_Owner.u_RepetitionCancel;
             m_OnClickInit        = true;
             m_AutoCancelLast     = m_Owner.u_AutoCancelLast;
@@ -94,7 +79,7 @@ namespace ET.Client
         }
 
         //传入对象 选中目标
-        public void OnClickItem(TItemRenderer item)
+        public void OnClickItem(Entity item)
         {
             var index = GetItemIndex(item);
             if (index < 0)
@@ -169,16 +154,17 @@ namespace ET.Client
             }
         }
 
-        private void OnClickItem(int index, TItemRenderer item, bool select)
+        private void OnClickItem(int index, Entity item, bool select)
         {
-            m_OnClickItemEvent?.Invoke(index, m_Data[index], item, select);
+            if (!m_OnClickInit) return;
+            YIUILoopWatcher.Instance.Click(OwnerEntity, index, m_Data[index], item, select);
         }
 
-        private void AddOnClickEvent(TItemRenderer uiBase)
+        private void AddOnClickEvent(Entity item)
         {
             if (!m_OnClickInit) return;
 
-            var eventTable = uiBase.GetParent<YIUIChild>().EventTable;
+            var eventTable = item.GetParent<YIUIChild>().EventTable;
             if (eventTable == null)
             {
                 Debug.LogError($"目标item 没有 event表 请检查");
@@ -188,11 +174,12 @@ namespace ET.Client
             var uEventClickItem = eventTable.FindEvent<UIEventP0>(m_ItemClickEventName);
             if (uEventClickItem == null)
             {
-                Debug.LogError($"当前监听的事件未找到 请检查 {typeof(TItemRenderer).Name} 中是否有这个事件 {m_ItemClickEventName}");
+                Debug.LogError($"当前监听的事件未找到 请检查 {m_BindVo.ComponentType?.Name} 中是否有这个事件 {m_ItemClickEventName}");
+                m_OnClickInit = false;
             }
             else
             {
-                uEventClickItem.Add(() => { OnClickItem(uiBase); });
+                uEventClickItem.Add(() => { OnClickItem(item); });
             }
         }
 
