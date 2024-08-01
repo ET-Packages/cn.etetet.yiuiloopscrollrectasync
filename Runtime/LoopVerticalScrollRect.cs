@@ -5,7 +5,7 @@ using ET;
 
 namespace UnityEngine.UI
 {
-    [AddComponentMenu("UI/Loop Vertical Scroll Rect", 51)]
+    //[AddComponentMenu("UI/Loop Vertical Scroll Rect", 51)]
     [DisallowMultipleComponent]
     public class LoopVerticalScrollRect : LoopScrollRect
     {

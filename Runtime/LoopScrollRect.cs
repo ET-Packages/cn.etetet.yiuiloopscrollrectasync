@@ -12,7 +12,7 @@ namespace UnityEngine.UI
     {
         [HideInInspector]
         [NonSerialized]
-        public LoopScrollDataSource dataSource = null;
+        public IYIUILoopScrollDataSource dataSource = null;
         
         protected override void ProvideData(Transform transform, int index)
         {

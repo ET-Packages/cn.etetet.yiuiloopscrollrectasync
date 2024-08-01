@@ -32,7 +32,7 @@ namespace UnityEngine.UI
         /// </summary>
         [HideInInspector]
         [NonSerialized]
-        public LoopScrollPrefabAsyncSource prefabSource = null;
+        public IYIUILoopScrollPrefabAsyncSource prefabSource = null;
 
         /// <summary>
         /// The scroll's total count for items with id in [0, totalCount]. Negative value like -1 means infinite items.
