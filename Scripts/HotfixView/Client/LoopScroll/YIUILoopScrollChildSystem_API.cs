@@ -17,7 +17,7 @@ namespace ET.Client
         //不管是要修改数据长度 还是数据变更了 都用此方法刷新
         public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data)
         {
-            self.m_Data             = data;
+            self.Data               = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells();
         }
@@ -26,7 +26,7 @@ namespace ET.Client
         //适用于数据量很少的情况 需要动态显示的
         public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data)
         {
-            self.m_Data             = data;
+            self.Data               = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells(0, 99999);
             await self.ScrollToCellWithinTime(0, 0);
@@ -85,7 +85,19 @@ namespace ET.Client
         public static List<T> GetShowData<T>(this YIUILoopScrollChild self)
         {
             var listData = new List<T>();
-            var data     = (IList<T>)self.m_Data;
+            if (self.Data == null)
+            {
+                Log.Error($"数据为空 请先设置数据");
+                return listData;
+            }
+
+            if (typeof(T) != self.m_DataType)
+            {
+                Log.Error($"数据类型不匹配 请检查 T:{typeof(T)} 实际数据类型:{self.m_DataType}");
+                return listData;
+            }
+
+            var data = (IList<T>)self.Data;
             for (var i = self.ItemStart; i < self.ItemEnd; i++)
             {
                 listData.Add(data[i]);
@@ -122,7 +134,20 @@ namespace ET.Client
         public static List<T> GetSelectData<T>(this YIUILoopScrollChild self)
         {
             var selectList = new List<T>();
-            var data       = (IList<T>)self.m_Data;
+
+            if (self.Data == null)
+            {
+                Log.Error($"数据为空 请先设置数据");
+                return selectList;
+            }
+
+            if (typeof(T) != self.m_DataType)
+            {
+                Log.Error($"数据类型不匹配 请检查 T:{typeof(T)} 实际数据类型:{self.m_DataType}");
+                return selectList;
+            }
+
+            var data = (IList<T>)self.Data;
             foreach (var index in self.GetSelectIndex())
             {
                 selectList.Add(data[index]);

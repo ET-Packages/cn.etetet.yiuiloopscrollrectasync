@@ -162,13 +162,13 @@ namespace ET.Client
             self.ResetItemIndex(transform, index);
 
             var select = self.m_OnClickItemHashSet.Contains(index);
-            if (self.m_Data == null)
+            if (self.Data == null)
             {
                 Debug.LogError($"{self.Parent.GetType().Name} {self.m_Owner.name}当前没有设定数据 m_Data == null");
                 return;
             }
 
-            YIUILoopWatcher.Instance.Renderer(self.OwnerEntity, index, self.m_Data[index], item, select);
+            YIUILoopHelper.Renderer(self.m_LoopRendererSystemType, self.OwnerEntity, item, self.Data[index], index, select);
         }
 
         #endregion

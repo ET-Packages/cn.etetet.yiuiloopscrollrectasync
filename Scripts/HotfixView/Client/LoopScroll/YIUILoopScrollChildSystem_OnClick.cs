@@ -89,9 +89,9 @@ namespace ET.Client
         //传入索引 选中目标
         public static void OnClickItem(this YIUILoopScrollChild self, int index)
         {
-            if (index < 0 || index >= self.m_Data.Count)
+            if (index < 0 || index >= self.Data.Count)
             {
-                Debug.LogError($"索引越界{index}  0 - {self.m_Data.Count}");
+                Debug.LogError($"索引越界{index}  0 - {self.Data.Count}");
                 return;
             }
 
@@ -151,7 +151,7 @@ namespace ET.Client
         private static void OnClickItem(this YIUILoopScrollChild self, int index, Entity item, bool select)
         {
             if (!self.m_OnClickInit) return;
-            YIUILoopWatcher.Instance.Click(self.OwnerEntity, index, self.m_Data[index], item, select);
+            YIUILoopHelper.OnClick(self.m_LoopOnClickSystemType, self.OwnerEntity, item, self.Data[index], index, select);
         }
 
         private static void AddOnClickEvent(this YIUILoopScrollChild self, Entity item)
