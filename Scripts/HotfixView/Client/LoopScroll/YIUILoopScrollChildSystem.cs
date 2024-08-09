@@ -143,33 +143,15 @@ namespace ET.Client
                 var layoutElement = ownerRectTransform.GetComponent<ILayoutElement>();
                 if (layoutElement == null)
                 {
-                    Debug.LogError($"{ownerRectTransform.name} 没有LayoutElement组件 请检查错误");
-                }
-                else
-                {
                     var layoutGroup = ownerRectTransform.GetComponent<ILayoutGroup>();
                     if (layoutGroup == null)
                     {
-                        if (self.m_Owner.horizontal)
-                        {
-                            if (layoutElement.preferredWidth <= 0)
-                            {
-                                Debug.LogError($"{ownerRectTransform.name} 没有设置LayoutElement的preferredWidth 请检查错误");
-                            }
-                        }
-                        else if (self.m_Owner.vertical)
-                        {
-                            if (layoutElement.preferredHeight <= 0)
-                            {
-                                Debug.LogError($"{ownerRectTransform.name} 没有设置LayoutElement的preferredHeight 请检查错误");
-                            }
-                        }
+                        Debug.LogError($"{ownerRectTransform.name} 没有LayoutElement组件 请检查错误");
                     }
                 }
 
                 self.m_FirstCheckLayoutElement = true;
             }
-
             #endif
 
             self.AddItemRendererByDic(ownerRectTransform, item);
