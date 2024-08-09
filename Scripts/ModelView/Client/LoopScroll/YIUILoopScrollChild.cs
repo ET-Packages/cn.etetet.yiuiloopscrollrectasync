@@ -58,5 +58,9 @@ namespace ET.Client
                 }
             }
         }
+
+        #if UNITY_EDITOR
+        public bool m_FirstCheckLayoutElement;
+        #endif
     }
 }
