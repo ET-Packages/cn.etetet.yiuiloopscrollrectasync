@@ -22,6 +22,7 @@ namespace ET.Client
         public YIUIWindowComponent UIWindow => u_UIWindow;
         public EntityRef<YIUIViewComponent> u_UIView;
         public YIUIViewComponent UIView => u_UIView;
+        public UnityEngine.UI.LoopVerticalScrollRect u_ComLoopScrollVertical;
 
     }
 }

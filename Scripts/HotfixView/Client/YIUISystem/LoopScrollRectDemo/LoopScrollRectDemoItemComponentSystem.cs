@@ -5,11 +5,7 @@ using System.Collections.Generic;
 
 namespace ET.Client
 {
-    /// <summary>
-    /// Author  YIUI
-    /// Date    2024.10.11
-    /// Desc
-    /// </summary>
+
     [FriendOf(typeof(LoopScrollRectDemoItemComponent))]
     public static partial class LoopScrollRectDemoItemComponentSystem
     {

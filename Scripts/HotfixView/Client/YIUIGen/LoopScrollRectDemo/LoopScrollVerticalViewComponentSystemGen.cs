@@ -34,6 +34,7 @@ namespace ET.Client
             self.UIView.ViewWindowType = EViewWindowType.View;
             self.UIView.StackOption = EViewStackOption.VisibleTween;
 
+            self.u_ComLoopScrollVertical = self.UIBase.ComponentTable.FindComponent<UnityEngine.UI.LoopVerticalScrollRect>("u_ComLoopScrollVertical");
 
         }
     }
