@@ -36,23 +36,6 @@ namespace ET.Client
             self.m_OnClickItemHashSet.Clear();
         }
 
-        //reset=吧之前选择的都取消掉 讲道理应该都是true
-        //false出问题自己查
-        public static void ClearSelect(this YIUILoopScrollChild self, bool reset = true)
-        {
-            if (reset)
-            {
-                var selectCount = self.m_OnClickItemHashSet.Count;
-                for (var i = 0; i < selectCount; i++)
-                {
-                    self.OnClickItemQueuePeek();
-                }
-            }
-
-            self.m_OnClickItemQueue.Clear();
-            self.m_OnClickItemHashSet.Clear();
-        }
-
         //动态改变 自动取消上一个选择的
         public static void ChangeAutoCancelLast(this YIUILoopScrollChild self, bool autoCancelLast)
         {

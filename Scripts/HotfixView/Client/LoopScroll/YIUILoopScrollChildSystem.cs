@@ -40,6 +40,10 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this YIUILoopScrollChild self)
         {
+            foreach (var code in self.m_BanLayerOptionForeverHashSet)
+            {
+                YIUIMgrComponent.Inst.RecoverLayerOptionForever(code);
+            }
         }
 
         #endregion

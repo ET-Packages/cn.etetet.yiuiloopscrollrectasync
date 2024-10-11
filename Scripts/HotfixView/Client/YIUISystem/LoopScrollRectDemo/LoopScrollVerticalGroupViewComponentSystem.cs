@@ -34,7 +34,7 @@ namespace ET.Client
             }
 
             self.Loop.ClearSelect();
-            await self.Loop.SetDataRefresh(list, 0);
+            self.Loop.SetDataRefresh(list, 0).NoContext();
             return true;
         }
 
