@@ -164,5 +164,13 @@ namespace ET.Client
         }
 
         #endregion
+
+        /// <summary>
+        /// 设置创建间隔
+        /// </summary>
+        public static void ChangeCreateInterval(this YIUILoopScrollChild self, float interval)
+        {
+            self.m_Owner.u_CreateInterval = interval;
+        }
     }
 }

@@ -56,8 +56,7 @@ namespace UnityEngine.UI
     {
         public static async ETTask<GameObject> GetObject(this IYIUILoopScrollPrefabAsyncSource source, int index)
         {
-            var iEventSystems =
-                    EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
+            var iEventSystems = EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
             if (iEventSystems is not { Count: > 0 })
             {
                 Log.Error($"类:{source.GetType()} 没有具体实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
@@ -82,8 +81,7 @@ namespace UnityEngine.UI
 
         public static void ReturnObject(this IYIUILoopScrollPrefabAsyncSource source, Transform trans)
         {
-            var iEventSystems =
-                    EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
+            var iEventSystems = EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
             if (iEventSystems is not { Count: > 0 })
             {
                 Log.Error($"类:{source.GetType()} 没有具体实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");

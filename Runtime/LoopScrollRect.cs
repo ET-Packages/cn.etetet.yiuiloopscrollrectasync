@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using ET;
+using YIUIFramework;
 
 namespace UnityEngine.UI
 {
@@ -13,12 +12,12 @@ namespace UnityEngine.UI
         [HideInInspector]
         [NonSerialized]
         public IYIUILoopScrollDataSource dataSource = null;
-        
+
         protected override void ProvideData(Transform transform, int index)
         {
             dataSource.ProvideData(transform, index);
         }
-        
+
         protected override async ETTask<RectTransform> GetFromTempPool(int itemIdx)
         {
             RectTransform nextItem = null;
@@ -36,10 +35,30 @@ namespace UnityEngine.UI
             }
             else
             {
-                nextItem = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
+                if (u_CreateInterval > 0)
+                {
+                    if (m_NextWaitTime > 0)
+                    {
+                        await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeWaitAsync, ETTask>(new YIUIInvokeWaitAsync
+                        {
+                            Time = m_NextWaitTime,
+                        });
+                    }
+
+                    var createBeforTime = Time.time;
+                    nextItem         = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
+                    var residueTime = u_CreateInterval - (Time.time - createBeforTime);
+                    m_NextWaitTime = residueTime <= 0 ? 0 : (long)(residueTime * 1000);
+                }
+                else
+                {
+                    nextItem = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
+                }
+
                 nextItem.transform.SetParent(m_Content, false);
                 nextItem.gameObject.SetActive(true);
             }
+
             ProvideData(nextItem, itemIdx);
             return nextItem;
         }
@@ -61,8 +80,10 @@ namespace UnityEngine.UI
                 {
                     prefabSource.ReturnObject(m_Content.GetChild(i));
                 }
+
                 deletedItemTypeStart = 0;
             }
+
             if (deletedItemTypeEnd > 0)
             {
                 int t = m_Content.childCount - deletedItemTypeEnd;
@@ -70,6 +91,7 @@ namespace UnityEngine.UI
                 {
                     prefabSource.ReturnObject(m_Content.GetChild(i));
                 }
+
                 deletedItemTypeEnd = 0;
             }
         }
