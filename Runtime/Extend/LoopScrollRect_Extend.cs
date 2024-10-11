@@ -28,8 +28,6 @@ namespace UnityEngine.UI
         [LabelText("创建间隔")]
         public float u_CreateInterval = 0f;
 
-        private long m_NextWaitTime = 0;
-
         public int   u_StartLine              => StartLine;                                             //可见的第一行
         public int   u_CurrentLines           => CurrentLines;                                          //滚动中的当前行数
         public int   u_TotalLines             => TotalLines;                                            //总数

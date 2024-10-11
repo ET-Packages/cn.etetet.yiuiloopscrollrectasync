@@ -35,26 +35,7 @@ namespace UnityEngine.UI
             }
             else
             {
-                if (u_CreateInterval > 0)
-                {
-                    if (m_NextWaitTime > 0)
-                    {
-                        await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeWaitAsync, ETTask>(new YIUIInvokeWaitAsync
-                        {
-                            Time = m_NextWaitTime,
-                        });
-                    }
-
-                    var createBeforTime = Time.time;
-                    nextItem         = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
-                    var residueTime = u_CreateInterval - (Time.time - createBeforTime);
-                    m_NextWaitTime = residueTime <= 0 ? 0 : (long)(residueTime * 1000);
-                }
-                else
-                {
-                    nextItem = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
-                }
-
+                nextItem = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
                 nextItem.transform.SetParent(m_Content, false);
                 nextItem.gameObject.SetActive(true);
             }

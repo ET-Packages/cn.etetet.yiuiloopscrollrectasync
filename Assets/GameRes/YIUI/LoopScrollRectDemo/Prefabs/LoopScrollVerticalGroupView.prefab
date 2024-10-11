@@ -85,7 +85,7 @@ MonoBehaviour:
   u_MaxClickCount: 1
   u_AutoCancelLast: 1
   u_RepetitionCancel: 0
-  u_CreateInterval: 0
+  u_CreateInterval: 0.05
 --- !u!114 &6730516429220418095
 MonoBehaviour:
   m_ObjectHideFlags: 0

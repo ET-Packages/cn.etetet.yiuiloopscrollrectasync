@@ -14,7 +14,7 @@ namespace ET.Client
         {
             return new()
             {
-                new GMParamInfo(EGMParamType.Int, "Tab", "1"),
+                new GMParamInfo(EGMParamType.Int, "Tab", "3"),
             };
         }
 
