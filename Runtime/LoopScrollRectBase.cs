@@ -1097,7 +1097,7 @@ namespace UnityEngine.UI
                 sizeToFill = GetAbsDimension(viewRect.rect.size) + Mathf.Abs(contentOffset);
                 if (sizeToFill <= 0)
                 {
-                    Debug.LogError($"LoopScrollRect获取刷新范围 强制刷新一次后依然 <=0 这样肯定刷新不出Item 请检查 是否设置有问题 {this.gameObject.name}");
+                    Debug.LogError($"LoopScrollRect获取刷新范围 强制刷新一次后依然 <=0 这样肯定刷新不出Item 请检查 是否设置有问题 {this.gameObject.name}", this);
                 }
             }
             float sizeFilled = 0;
