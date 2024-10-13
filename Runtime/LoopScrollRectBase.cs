@@ -1093,8 +1093,17 @@ namespace UnityEngine.UI
             if (sizeToFill <= 0)
             {
                 //Debug.Log($" sizeToFill <= 0 强制刷新一次");
+                var lastActive = viewRect.gameObject.activeSelf;
+                if (!lastActive)
+                {
+                    viewRect.gameObject.SetActive(true);
+                }
                 Canvas.ForceUpdateCanvases();
                 sizeToFill = GetAbsDimension(viewRect.rect.size) + Mathf.Abs(contentOffset);
+                if (!lastActive)
+                {
+                    viewRect.gameObject.SetActive(false);
+                }
                 if (sizeToFill <= 0)
                 {
                     Debug.LogError($"LoopScrollRect获取刷新范围 强制刷新一次后依然 <=0 这样肯定刷新不出Item 请检查 是否设置有问题 {this.gameObject.name}", this);

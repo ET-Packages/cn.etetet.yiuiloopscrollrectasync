@@ -28,6 +28,14 @@ namespace UnityEngine.UI
         [LabelText("创建间隔")]
         public float u_CreateInterval = 0f;
 
+        [SerializeField]
+        [LabelText("滚动时使用创建间隔")]
+        public bool u_ForeverInterval = false;
+
+        [SerializeField]
+        [LabelText("刷新时可操作")]
+        public bool u_RefreshCanOption = false;
+
         public int   u_StartLine              => StartLine;                                             //可见的第一行
         public int   u_CurrentLines           => CurrentLines;                                          //滚动中的当前行数
         public int   u_TotalLines             => TotalLines;                                            //总数

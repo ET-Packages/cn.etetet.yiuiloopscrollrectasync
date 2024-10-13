@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ET.Client
@@ -72,7 +71,7 @@ namespace ET.Client
 
         private static void SyncPoolCreateInterval(this YIUILoopScrollChild self, bool open)
         {
-            self.m_ItemPool.ChangeCreateInterval(open ? self.m_Owner.u_CreateInterval : 0);
+            self.m_ItemPool.ChangeCreateInterval((open || self.m_Owner.u_ForeverInterval) ? self.m_Owner.u_CreateInterval : 0);
         }
 
         public static void ClearCells(this YIUILoopScrollChild self)
@@ -118,6 +117,7 @@ namespace ET.Client
 
         private static long BanLayerOptionForever(this YIUILoopScrollChild self)
         {
+            if (self.m_Owner.u_RefreshCanOption) return 0;
             var code = YIUIMgrComponent.Inst.BanLayerOptionForever();
             self.m_BanLayerOptionForeverHashSet.Add(code);
             return code;
@@ -125,6 +125,7 @@ namespace ET.Client
 
         private static void RecoverLayerOptionForever(this YIUILoopScrollChild self, long code)
         {
+            if (code == 0) return;
             self.m_BanLayerOptionForeverHashSet.Remove(code);
             YIUIMgrComponent.Inst.RecoverLayerOptionForever(code);
         }
