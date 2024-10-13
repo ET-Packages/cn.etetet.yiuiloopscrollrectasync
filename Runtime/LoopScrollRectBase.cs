@@ -2178,11 +2178,12 @@ namespace UnityEngine.UI
         /// </summary>
         private async ETTask UpdateBounds(bool updateItems) //==========LoopScrollRect==========
         {
+            if (m_Content == null) return;
+
+            using var coroutineLock = await ET.EventSystem.Instance.YIUIInvokeAsync<YIUIInvokeCoroutineLock, ETTask<Entity>>(new YIUIInvokeCoroutineLock { Lock = this.GetHashCode() });
+
             m_ViewBounds    = new Bounds(viewRect.rect.center, viewRect.rect.size);
             m_ContentBounds = GetBounds();
-
-            if (m_Content == null)
-                return;
 
             // ============LoopScrollRect============
             // Don't do this in Rebuild. Make use of ContentBounds before Adjust here.

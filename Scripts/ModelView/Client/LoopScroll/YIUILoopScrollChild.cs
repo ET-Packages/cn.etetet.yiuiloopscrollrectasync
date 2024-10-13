@@ -35,7 +35,7 @@ namespace ET.Client
         public Dictionary<Transform, int>               m_ItemTransformIndexDic = new();
 
         public YIUIInvokeLoadInstantiateByVo m_InvokeLoadInstantiate;
-        public HashSet<long> m_BanLayerOptionForeverHashSet = new();
+        public HashSet<long>                 m_BanLayerOptionForeverHashSet = new();
 
         private IList m_Data;
 
