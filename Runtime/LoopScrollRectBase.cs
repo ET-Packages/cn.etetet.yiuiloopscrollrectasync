@@ -880,15 +880,15 @@ namespace UnityEngine.UI
             await ScrollToCellCoroutine(index, Mathf.Abs(dist) / time);
         }
 
+        private readonly YIUIInvokeWaitFrameAsync m_WaitFrameAsync = new();
+
         private async ETTask ScrollToCellCoroutine(int index, float speed)
         {
             bool needMoving = true;
 
-            var waitFrameAsync = new YIUIInvokeWaitFrameAsync();
-
             while (needMoving)
             {
-                await ET.EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeWaitFrameAsync, ETTask>(waitFrameAsync);
+                await ET.EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeWaitFrameAsync, ETTask>(m_WaitFrameAsync);
 
                 if (!m_Dragging)
                 {
@@ -1090,6 +1090,16 @@ namespace UnityEngine.UI
             ReturnToTempPool(reverseDirection, m_Content.childCount);
 
             float sizeToFill = GetAbsDimension(viewRect.rect.size) + Mathf.Abs(contentOffset);
+            if (sizeToFill <= 0)
+            {
+                //Debug.Log($" sizeToFill <= 0 强制刷新一次");
+                Canvas.ForceUpdateCanvases();
+                sizeToFill = GetAbsDimension(viewRect.rect.size) + Mathf.Abs(contentOffset);
+                if (sizeToFill <= 0)
+                {
+                    Debug.LogError($"LoopScrollRect获取刷新范围 强制刷新一次后依然 <=0 这样肯定刷新不出Item 请检查 是否设置有问题 {this.gameObject.name}");
+                }
+            }
             float sizeFilled = 0;
 
             // m_ViewBounds may be not ready when RefillCells on Start
