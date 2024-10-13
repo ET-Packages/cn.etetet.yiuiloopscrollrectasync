@@ -59,7 +59,7 @@ namespace ET.Client
             self.m_ItemTransformDic.Clear();
             self.m_ItemTransformIndexDic.Clear();
             self.m_BindVo             = data.Value;
-            self.m_ItemPool           = new(self.OnCreateItemRenderer, 0, owner.u_CreateInterval);
+            self.m_ItemPool           = new(self.OnCreateItemRenderer);
             self.m_Owner.prefabSource = self;
             self.m_Owner.dataSource   = self;
 

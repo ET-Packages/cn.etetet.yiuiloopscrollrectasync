@@ -15,23 +15,64 @@ namespace ET.Client
         public static async ETTask RefillCells(this YIUILoopScrollChild self, int startItem = 0, float contentOffset = 0)
         {
             var code = self.BanLayerOptionForever();
-            await self.m_Owner.RefillCells(startItem, contentOffset);
-            self.RecoverLayerOptionForever(code);
+            self.SyncPoolCreateInterval(true);
+            try
+            {
+                await self.m_Owner.RefillCells(startItem, contentOffset);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"刷新错误 RefillCells : {e}");
+            }
+            finally
+            {
+                self.SyncPoolCreateInterval(false);
+                self.RecoverLayerOptionForever(code); 
+            }
         }
 
         //在结束时重新填充endItem中的单元格，同时清除现有的单元格
         public static async ETTask RefillCellsFromEnd(this YIUILoopScrollChild self, int endItem = 0, bool alignStart = false)
         {
             var code = self.BanLayerOptionForever();
-            await self.m_Owner.RefillCellsFromEnd(endItem, alignStart);
-            self.RecoverLayerOptionForever(code);
+            self.SyncPoolCreateInterval(true);
+            try
+            {
+                await self.m_Owner.RefillCellsFromEnd(endItem, alignStart);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"刷新错误 RefillCellsFromEnd : {e}");
+            }
+            finally
+            {
+                self.SyncPoolCreateInterval(false);
+                self.RecoverLayerOptionForever(code); 
+            }
         }
 
         public static async ETTask RefreshCells(this YIUILoopScrollChild self)
         {
             var code = self.BanLayerOptionForever();
-            await self.m_Owner.RefreshCells();
-            self.RecoverLayerOptionForever(code);
+            self.SyncPoolCreateInterval(true);
+            try
+            {
+                await self.RefreshCells();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"刷新错误 RefreshCells : {e}");
+            }
+            finally
+            {
+                self.SyncPoolCreateInterval(false);
+                self.RecoverLayerOptionForever(code); 
+            }
+        }
+
+        private static void SyncPoolCreateInterval(this YIUILoopScrollChild self, bool open)
+        {
+            self.m_ItemPool.ChangeCreateInterval(open ? self.m_Owner.u_CreateInterval : 0);
         }
 
         public static void ClearCells(this YIUILoopScrollChild self)

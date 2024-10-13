@@ -200,7 +200,6 @@ namespace ET.Client
         public static void ChangeCreateInterval(this YIUILoopScrollChild self, float interval)
         {
             self.m_Owner.u_CreateInterval = interval;
-            self.m_ItemPool.ChangeCreateInterval(interval);
         }
     }
 }
