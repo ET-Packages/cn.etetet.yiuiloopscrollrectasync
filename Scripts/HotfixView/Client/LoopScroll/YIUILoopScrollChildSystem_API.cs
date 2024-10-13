@@ -22,16 +22,6 @@ namespace ET.Client
             await self.RefillCells();
         }
 
-        //所有数据全部刷新 全部显示 不基于无限循环了
-        //适用于数据量很少的情况 需要动态显示的
-        public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data)
-        {
-            self.Data               = data;
-            self.m_Owner.totalCount = data.Count;
-            await self.RefillCells(0, 99999);
-            await self.ScrollToCellWithinTime(0, 0);
-        }
-
         //刷新时默认选中某个索引数据
         //注意这里相当于+=操作 如果你会频繁调用这个方法
         //又想每次刷新选中不同的索引
@@ -47,6 +37,28 @@ namespace ET.Client
         {
             self.SetDefaultSelect(index);
             await self.SetDataRefresh(data);
+        }
+
+        //所有数据全部刷新 全部显示 不基于无限循环了
+        //适用于数据量很少的情况 需要动态显示的
+        public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data)
+        {
+            self.Data               = data;
+            self.m_Owner.totalCount = data.Count;
+            await self.RefillCells(0, 99999);
+            await self.ScrollToCellWithinTime(0, 0);
+        }
+
+        public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data, int index)
+        {
+            self.SetDefaultSelect(index);
+            await self.SetDataRefreshShowAll(data);
+        }
+
+        public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data, List<int> index)
+        {
+            self.SetDefaultSelect(index);
+            await self.SetDataRefreshShowAll(data);
         }
 
         //如果 < 0 则表示这个对象在对象池里
