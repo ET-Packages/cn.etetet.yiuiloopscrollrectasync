@@ -74,7 +74,7 @@ namespace ET.Client
         {
             if (index < 0 || index >= self.Data.Count)
             {
-                Debug.LogError($"索引越界{index}  0 - {self.Data.Count}");
+                Debug.LogError($"点击 索引越界:[ {index} ] 限制范围[0 - {self.Data.Count}]");
                 return;
             }
 
