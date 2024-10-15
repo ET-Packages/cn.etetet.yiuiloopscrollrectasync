@@ -56,7 +56,7 @@ namespace ET.Client
             self.SyncPoolCreateInterval(true);
             try
             {
-                await self.RefreshCells();
+                await self.m_Owner.RefreshCells();
             }
             catch (Exception e)
             {
