@@ -41,12 +41,6 @@ namespace ET.Client
             await self.UIPanel.OpenViewAsync(((ELoopScrollRectDemoPanelViewEnum)p1).ToString());
         }
 
-        [YIUIInvoke]
-        private static async ETTask OnEventCloseInvoke(this LoopScrollRectDemoPanelComponent self)
-        {
-            await self.UIPanel.CloseAsync();
-        }
-
         #endregion YIUIEvent结束
     }
 }

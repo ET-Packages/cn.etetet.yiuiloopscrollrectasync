@@ -31,8 +31,8 @@ namespace ET.Client
         public YIUIWindowComponent UIWindow => u_UIWindow;
         public EntityRef<YIUIPanelComponent> u_UIPanel;
         public YIUIPanelComponent UIPanel => u_UIPanel;
-        public UITaskEventP0 u_EventClose;
-        public UITaskEventHandleP0 u_EventCloseHandle;
+        public EntityRef<ET.Client.YIUICloseCommonComponent> u_UIYIUIClose_White;
+        public ET.Client.YIUICloseCommonComponent UIYIUIClose_White => u_UIYIUIClose_White;
         public UITaskEventP1<int> u_EventTab;
         public UITaskEventHandleP1<int> u_EventTabHandle;
 

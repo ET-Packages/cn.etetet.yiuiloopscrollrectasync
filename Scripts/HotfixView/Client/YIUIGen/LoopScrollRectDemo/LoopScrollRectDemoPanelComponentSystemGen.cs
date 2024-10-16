@@ -36,10 +36,9 @@ namespace ET.Client
             self.UIPanel.StackOption = EPanelStackOption.VisibleTween;
             self.UIPanel.Priority = 0;
 
-            self.u_EventClose = self.UIBase.EventTable.FindEvent<UITaskEventP0>("u_EventClose");
-            self.u_EventCloseHandle = self.u_EventClose.Add(self,"OnEventCloseInvoke");
             self.u_EventTab = self.UIBase.EventTable.FindEvent<UITaskEventP1<int>>("u_EventTab");
             self.u_EventTabHandle = self.u_EventTab.Add(self,"OnEventTabInvoke");
+            self.u_UIYIUIClose_White = self.UIBase.CDETable.FindUIOwner<ET.Client.YIUICloseCommonComponent>("YIUIClose_White");
 
         }
     }
