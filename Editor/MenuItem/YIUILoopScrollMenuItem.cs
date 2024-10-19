@@ -48,18 +48,10 @@ namespace YIUIFramework.Editor
             CreateLoopScroll("LoopScrollVerticalGroup");
         }
 
-        private static void CreateLoopScroll(string name)
+        private static GameObject CreateLoopScroll(string name)
         {
-            var activeObject = Selection.activeObject as GameObject;
-            if (activeObject == null)
-            {
-                UnityTipsHelper.ShowError($"请选择一个对象 右键创建");
-                return;
-            }
-
-            var path = $"Packages/cn.etetet.yiuiloopscrollrectasync/Editor/TemplatePrefabs/{name}.prefab";
-
-            Selection.activeObject = UIMenuItemHelper.CloneGameObjectByPath(path, activeObject.transform);
+            var path = $"Packages/cn.etetet.yiuiloopscrollrectasync/Editor/TemplatePrefabs";
+            return YIUICommonMenuItem.CreateTarget(path, name);
         }
     }
 }
