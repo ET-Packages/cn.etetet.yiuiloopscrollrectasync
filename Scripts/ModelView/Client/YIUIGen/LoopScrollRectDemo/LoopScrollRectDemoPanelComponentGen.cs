@@ -35,6 +35,7 @@ namespace ET.Client
         public ET.Client.YIUICloseCommonComponent UIYIUIClose_White => u_UIYIUIClose_White;
         public UITaskEventP1<int> u_EventTab;
         public UITaskEventHandleP1<int> u_EventTabHandle;
+        public const string OnEventTabInvoke = "LoopScrollRectDemoPanelComponent.OnEventTabInvoke";
 
     }
 }

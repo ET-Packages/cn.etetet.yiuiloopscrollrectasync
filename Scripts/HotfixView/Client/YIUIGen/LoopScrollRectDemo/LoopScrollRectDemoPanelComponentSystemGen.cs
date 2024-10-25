@@ -37,7 +37,7 @@ namespace ET.Client
             self.UIPanel.Priority = 0;
 
             self.u_EventTab = self.UIBase.EventTable.FindEvent<UITaskEventP1<int>>("u_EventTab");
-            self.u_EventTabHandle = self.u_EventTab.Add(self,"OnEventTabInvoke");
+            self.u_EventTabHandle = self.u_EventTab.Add(self,LoopScrollRectDemoPanelComponent.OnEventTabInvoke);
             self.u_UIYIUIClose_White = self.UIBase.CDETable.FindUIOwner<ET.Client.YIUICloseCommonComponent>("YIUIClose_White");
 
         }

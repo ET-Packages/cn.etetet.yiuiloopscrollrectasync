@@ -35,7 +35,7 @@ namespace ET.Client
 
         #region YIUIEvent开始
 
-        [YIUIInvoke]
+        [YIUIInvoke(LoopScrollRectDemoPanelComponent.OnEventTabInvoke)]
         private static async ETTask OnEventTabInvoke(this LoopScrollRectDemoPanelComponent self, int p1)
         {
             await self.UIPanel.OpenViewAsync(((ELoopScrollRectDemoPanelViewEnum)p1).ToString());

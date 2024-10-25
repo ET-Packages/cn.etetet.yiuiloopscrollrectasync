@@ -21,7 +21,7 @@ namespace ET.Client
 
         #region YIUIEvent开始
         
-        [YIUIInvoke]
+        [YIUIInvoke(LoopScrollRectDemoItemComponent.OnEventSelectInvoke)]
         private static void OnEventSelectInvoke(this LoopScrollRectDemoItemComponent self)
         {
 

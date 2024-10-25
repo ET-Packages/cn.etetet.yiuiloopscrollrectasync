@@ -22,6 +22,7 @@ namespace ET.Client
         public YIUIFramework.UIDataValueInt u_DataIndex;
         public UIEventP0 u_EventSelect;
         public UIEventHandleP0 u_EventSelectHandle;
+        public const string OnEventSelectInvoke = "LoopScrollRectDemoItemComponent.OnEventSelectInvoke";
 
     }
 }

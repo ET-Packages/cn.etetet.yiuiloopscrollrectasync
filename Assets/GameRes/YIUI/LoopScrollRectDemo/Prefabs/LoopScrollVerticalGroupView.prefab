@@ -86,6 +86,8 @@ MonoBehaviour:
   u_AutoCancelLast: 1
   u_RepetitionCancel: 0
   u_CreateInterval: 0.05
+  u_ForeverInterval: 0
+  u_RefreshCanOption: 0
 --- !u!114 &6730516429220418095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,9 +275,6 @@ MonoBehaviour:
       Data: true
     - Name: 
       Entry: 8
-      Data: 
-    - Name: PanelSplitEditorShowData
-      Entry: 6
       Data: 
   ComponentTable: {fileID: 6436454308326788770}
   DataTable: {fileID: 0}
