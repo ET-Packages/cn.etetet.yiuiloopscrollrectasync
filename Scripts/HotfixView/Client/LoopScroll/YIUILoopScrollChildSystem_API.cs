@@ -13,6 +13,14 @@ namespace ET.Client
     [FriendOf(typeof(YIUILoopScrollChild))]
     public static partial class YIUILoopScrollChildSystem
     {
+        /// <summary>
+        /// 当Data数据是泛型时 需要设置默认数据类型
+        /// </summary>
+        public static void SetDefaultDataType(this YIUILoopScrollChild self, Type type)
+        {
+            self.m_DefaultDataType = type;
+        }
+        
         //设置数据 然后刷新
         //不管是要修改数据长度 还是数据变更了 都用此方法刷新
         public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data)

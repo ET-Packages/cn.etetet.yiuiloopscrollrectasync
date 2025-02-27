@@ -24,6 +24,7 @@ namespace ET.Client
         public Entity            OwnerEntity => m_OwnerEntity;
 
         public YIUIBindVo     m_BindVo;
+        public Type           m_DefaultDataType;
         public Type           m_DataType;
         public LoopScrollRect m_Owner;
         public Type           m_ItemType;
@@ -47,7 +48,7 @@ namespace ET.Client
                 m_Data = value;
                 if (m_Data is { Count: > 0 })
                 {
-                    m_DataType               = m_Data[0].GetType();
+                    m_DataType               = m_DefaultDataType ?? m_Data[0].GetType();
                     m_LoopRendererSystemType = typeof(IYIUILoopRenderer<,,>).MakeGenericType(OwnerEntity?.GetType(), m_ItemType, m_DataType);
                     m_LoopOnClickSystemType  = typeof(IYIUILoopOnClick<,,>).MakeGenericType(OwnerEntity?.GetType(), m_ItemType, m_DataType);
                 }
