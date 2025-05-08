@@ -36,6 +36,10 @@ namespace UnityEngine.UI
         [LabelText("刷新时可操作")]
         public bool u_RefreshCanOption = false;
 
+        [SerializeField]
+        [LabelText("预加载")]
+        public int u_PreLoadCount = 0;
+
         public int   u_StartLine              => StartLine;                                             //可见的第一行
         public int   u_CurrentLines           => CurrentLines;                                          //滚动中的当前行数
         public int   u_TotalLines             => TotalLines;                                            //总数

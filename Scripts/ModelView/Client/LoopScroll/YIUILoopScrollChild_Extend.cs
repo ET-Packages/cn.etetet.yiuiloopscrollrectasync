@@ -27,5 +27,6 @@ namespace ET.Client
         public float         ContentSpacing         => m_Owner.u_ContentSpacing;                        //间隔
         public int           ItemStart              => m_Owner.u_ItemStart;                             //当前显示的第一个的Index                
         public int           ItemEnd                => m_Owner.u_ItemEnd;                               //当前显示的最后一个index 被+1了注意            
+        public int           PreLoadCount           => m_Owner.u_PreLoadCount;                          //初始化后自动预加载的个数
     }
 }

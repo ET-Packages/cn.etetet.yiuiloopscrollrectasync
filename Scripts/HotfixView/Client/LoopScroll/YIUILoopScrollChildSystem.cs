@@ -20,6 +20,7 @@ namespace ET.Client
         private static void Awake(this YIUILoopScrollChild self)
         {
             self.m_OwnerEntity = self.GetParent<Entity>();
+            self.AwakePreLoad();
         }
 
         [EntitySystem]
@@ -27,6 +28,7 @@ namespace ET.Client
         {
             self.m_OwnerEntity = self.GetParent<Entity>();
             self.Initialize(owner, itemType);
+            self.AwakePreLoad();
         }
 
         [EntitySystem]
@@ -35,6 +37,7 @@ namespace ET.Client
             self.m_OwnerEntity = self.GetParent<Entity>();
             self.Initialize(owner, itemType);
             self.SetOnClick(itemClickEventName);
+            self.AwakePreLoad();
         }
 
         [EntitySystem]
@@ -42,7 +45,7 @@ namespace ET.Client
         {
             foreach (var code in self.m_BanLayerOptionForeverHashSet)
             {
-                YIUIMgrComponent.Inst.RecoverLayerOptionForever(code);
+                YIUIMgrComponent.Inst?.RecoverLayerOptionForever(code);
             }
         }
 
@@ -176,6 +179,40 @@ namespace ET.Client
             self.m_ItemPool.Put(item);
             self.ResetItemIndex(transform, -1);
             transform.SetParent(self.m_Owner.u_CacheRect, false);
+        }
+
+        //初始化后预加载指定数量的实例
+        //适用于部分情况下需要提前加载实例 减少卡顿
+        //但是你本来就是打开后马上就刷新列表 那就没必要预加载了
+        private static void AwakePreLoad(this YIUILoopScrollChild self)
+        {
+            if (self.PreLoadCount <= 0) return;
+            self.PreLoadAsync(self.PreLoadCount).NoContext();
+        }
+
+        public static async ETTask PreLoadAsync(this YIUILoopScrollChild self, int count)
+        {
+            using var coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.YIUIFramework, self.GetHashCode());
+
+            var loadCount = count - self.m_ItemPool.Count;
+            if (loadCount <= 0) return;
+
+            using var listTemp = ListComponent<EntityRef<Entity>>.Create();
+            for (var i = 0; i < loadCount; i++)
+            {
+                var item      = await self.m_ItemPool.Get();
+                var transform = ((Entity)item)?.GetParent<YIUIChild>()?.OwnerRectTransform;
+                if (transform != null)
+                {
+                    transform.SetParent(self.m_Owner.u_CacheRect, false);
+                    listTemp.Add(item);
+                }
+            }
+
+            foreach (var item in listTemp)
+            {
+                self.m_ItemPool.Put(item);
+            }
         }
 
         private static void ProvideData(this YIUILoopScrollChild self, Transform transform, int index)

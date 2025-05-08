@@ -20,7 +20,7 @@ namespace ET.Client
         {
             self.m_DefaultDataType = type;
         }
-        
+
         //设置数据 然后刷新
         //不管是要修改数据长度 还是数据变更了 都用此方法刷新
         public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data)
@@ -45,6 +45,15 @@ namespace ET.Client
         {
             self.SetDefaultSelect(index);
             await self.SetDataRefresh(data);
+        }
+
+        //刷新时默认选中某个索引数据 并滚动到这个位置(一瞬间 非动画滚动)
+        public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data, int index, int scrollTo)
+        {
+            self.SetDefaultSelect(index);
+            self.Data               = data;
+            self.m_Owner.totalCount = data.Count;
+            await self.RefillCells(scrollTo);
         }
 
         //所有数据全部刷新 全部显示 不基于无限循环了
