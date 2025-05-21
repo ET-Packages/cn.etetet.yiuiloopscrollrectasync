@@ -25,7 +25,7 @@ namespace ET.Client
         //不管是要修改数据长度 还是数据变更了 都用此方法刷新
         public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data)
         {
-            self.Data               = data;
+            self.Data = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells();
         }
@@ -51,7 +51,7 @@ namespace ET.Client
         public static async ETTask SetDataRefresh(this YIUILoopScrollChild self, IList data, int index, int scrollTo)
         {
             self.SetDefaultSelect(index);
-            self.Data               = data;
+            self.Data = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells(scrollTo);
         }
@@ -60,7 +60,7 @@ namespace ET.Client
         //适用于数据量很少的情况 需要动态显示的
         public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data)
         {
-            self.Data               = data;
+            self.Data = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells(0, 99999);
             await self.ScrollToCellWithinTime(0, 0);
@@ -100,7 +100,7 @@ namespace ET.Client
             }
 
             var transform = self.Content.GetChild(childIndex);
-            var item      = self.GetItemRendererByDic(transform);
+            var item = self.GetItemRendererByDic(transform);
             return item;
         }
 
@@ -217,6 +217,22 @@ namespace ET.Client
         public static void ChangeCreateInterval(this YIUILoopScrollChild self, float interval)
         {
             self.m_Owner.u_CreateInterval = interval;
+        }
+
+        /// <summary>
+        /// 垂直滚动
+        /// </summary>
+        public static void Vertical(this YIUILoopScrollChild self, bool value)
+        {
+            self.m_Owner.vertical = value;
+        }
+
+        /// <summary>
+        /// 水平滚动
+        /// </summary>
+        public static void Horizontal(this YIUILoopScrollChild self, bool value)
+        {
+            self.m_Owner.horizontal = value;
         }
     }
 }
