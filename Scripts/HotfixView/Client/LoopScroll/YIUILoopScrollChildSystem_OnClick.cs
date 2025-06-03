@@ -176,9 +176,11 @@ namespace ET.Client
             var index = self.m_OnClickItemQueue.Dequeue();
             self.OnClickItemHashSetRemove(index);
             if (index < self.ItemStart || index >= self.ItemEnd) return;
-            var item = self.GetItemByIndex(index);
+            var item = self.GetItemByIndex(index, false);
             if (item != null)
+            {
                 self.OnClickItem(index, item, false);
+            }
         }
 
         private static void OnClickItemHashSetAdd(this YIUILoopScrollChild self, int index)
