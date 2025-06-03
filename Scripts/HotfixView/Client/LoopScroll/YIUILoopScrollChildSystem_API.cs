@@ -60,9 +60,11 @@ namespace ET.Client
         //适用于数据量很少的情况 需要动态显示的
         public static async ETTask SetDataRefreshShowAll(this YIUILoopScrollChild self, IList data)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             self.Data = data;
             self.m_Owner.totalCount = data.Count;
             await self.RefillCells(0, 99999);
+            self = selfRef;
             await self.ScrollToCellWithinTime(0, 0);
         }
 

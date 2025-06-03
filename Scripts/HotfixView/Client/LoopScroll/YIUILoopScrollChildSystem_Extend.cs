@@ -97,16 +97,20 @@ namespace ET.Client
         public static async ETTask ScrollToCell(this YIUILoopScrollChild self, int index, float speed)
         {
             if (self.TotalCount <= 0) return;
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var code = self.BanLayerOptionForever();
             await self.m_Owner.ScrollToCell(self.GetValidIndex(index), speed);
+            self = selfRef;
             self.RecoverLayerOptionForever(code);
         }
 
         public static async ETTask ScrollToCellWithinTime(this YIUILoopScrollChild self, int index, float time)
         {
             if (self.TotalCount <= 0) return;
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var code = self.BanLayerOptionForever();
             await self.m_Owner.ScrollToCellWithinTime(self.GetValidIndex(index), time);
+            self = selfRef;
             self.RecoverLayerOptionForever(code);
         }
 

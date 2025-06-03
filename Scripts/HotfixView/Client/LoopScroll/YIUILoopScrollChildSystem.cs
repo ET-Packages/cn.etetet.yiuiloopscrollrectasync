@@ -136,7 +136,9 @@ namespace ET.Client
 
         private static async ETTask<EntityRef<Entity>> OnCreateItemRenderer(this YIUILoopScrollChild self)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var item = await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeLoadInstantiateByVo, ETTask<Entity>>(self.m_InvokeLoadInstantiate);
+            self = selfRef;
             if (item == null)
             {
                 Log.Error($"YIUILoopScroll 实例化失败 请检查 {self.m_BindVo.PkgName} {self.m_BindVo.ResName}");
@@ -193,18 +195,21 @@ namespace ET.Client
 
         public static async ETTask PreLoadAsync(this YIUILoopScrollChild self, int count)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             using var coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.YIUIFramework, self.GetHashCode());
-
+            self = selfRef;
             var loadCount = count - self.m_ItemPool.Count;
             if (loadCount <= 0) return;
 
             using var listTemp = ListComponent<EntityRef<Entity>>.Create();
             for (var i = 0; i < loadCount; i++)
             {
+                self = selfRef;
                 var item      = await self.m_ItemPool.Get();
                 var transform = ((Entity)item)?.GetParent<YIUIChild>()?.OwnerRectTransform;
                 if (transform != null)
                 {
+                    self = selfRef;
                     transform.SetParent(self.m_Owner.u_CacheRect, false);
                     listTemp.Add(item);
                 }

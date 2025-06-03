@@ -27,11 +27,11 @@ namespace ET.Client
                 return;
             }
 
-            self.m_MaxClickCount      = Mathf.Max(1, self.m_Owner.u_MaxClickCount);
+            self.m_MaxClickCount = Mathf.Max(1, self.m_Owner.u_MaxClickCount);
             self.m_ItemClickEventName = itemClickEventName;
-            self.m_RepetitionCancel   = self.m_Owner.u_RepetitionCancel;
-            self.m_OnClickInit        = true;
-            self.m_AutoCancelLast     = self.m_Owner.u_AutoCancelLast;
+            self.m_RepetitionCancel = self.m_Owner.u_RepetitionCancel;
+            self.m_OnClickInit = true;
+            self.m_AutoCancelLast = self.m_Owner.u_AutoCancelLast;
             self.m_OnClickItemQueue.Clear();
             self.m_OnClickItemHashSet.Clear();
         }
@@ -78,7 +78,7 @@ namespace ET.Client
                 return;
             }
 
-            var item   = self.GetItemByIndex(index, false);
+            var item = self.GetItemByIndex(index, false);
             var select = self.OnClickItemQueueEnqueue(index);
             if (item != null)
             {
@@ -156,7 +156,18 @@ namespace ET.Client
             }
             else
             {
-                uEventClickItem.Add(() => { self.OnClickItem(item); });
+                EntityRef<YIUILoopScrollChild> selfRef = self;
+                EntityRef<Entity> itemRef = item;
+                uEventClickItem.Add(() =>
+                {
+                    if (selfRef.Entity == null || itemRef.Entity == null)
+                    {
+                        Log.Error($"OnClickItem 事件回调时，loopScrollChild 或 item 为空,{selfRef.Entity == null},{itemRef.Entity == null}");
+                        return;
+                    }
+
+                    selfRef.Entity.OnClickItem(itemRef.Entity);
+                });
             }
         }
 
