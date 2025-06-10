@@ -57,9 +57,9 @@ namespace UnityEngine.UI
         public static async ETTask<GameObject> GetObject(this IYIUILoopScrollPrefabAsyncSource source, int index)
         {
             var iEventSystems = EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
-            if (iEventSystems is not { Count: > 0 })
+            if (iEventSystems is not { Count: 1 })
             {
-                Log.Error($"类:{source.GetType()} 没有具体实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
+                Log.Error($"类:{source.GetType()} 没有具体实现的事件 或有多个实现的事件 [{iEventSystems?.Count}] IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
                 return default;
             }
 
@@ -71,7 +71,8 @@ namespace UnityEngine.UI
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"类:{source.GetType()} 事件错误: {e.Message}");
+                    Log.Error($"类:{source.GetType()} 事件错误: {e}");
+                    return default;
                 }
             }
 
@@ -82,9 +83,9 @@ namespace UnityEngine.UI
         public static void ReturnObject(this IYIUILoopScrollPrefabAsyncSource source, Transform trans)
         {
             var iEventSystems = EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollPrefabAsyncSourceSystem));
-            if (iEventSystems is not { Count: > 0 })
+            if (iEventSystems is not { Count: 1 })
             {
-                Log.Error($"类:{source.GetType()} 没有具体实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
+                Log.Error($"类:{source.GetType()} 没有具体实现的事件 或有多个实现的事件 [{iEventSystems?.Count}] IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
                 return;
             }
 
@@ -93,15 +94,12 @@ namespace UnityEngine.UI
                 try
                 {
                     eventSystem.ReturnObject((Entity)source, trans);
-                    return;
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"类:{source.GetType()} 事件错误: {e.Message}");
+                    Log.Error($"类:{source.GetType()} 事件错误: {e}");
                 }
             }
-
-            Log.Error($"类:{source.GetType()} 存在多个实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
         }
     }
 }

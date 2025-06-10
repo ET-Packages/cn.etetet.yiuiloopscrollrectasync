@@ -35,7 +35,13 @@ namespace UnityEngine.UI
             }
             else
             {
-                nextItem = (await prefabSource.GetObject(itemIdx)).transform as RectTransform;
+                var prefabObj = await prefabSource.GetObject(itemIdx);
+                if (prefabObj == null)
+                {   
+                    Debug.LogError($"预制异步加载错误,没有加载到预制资源 请检查");
+                    return null;
+                }
+                nextItem = prefabObj.transform as RectTransform;
                 nextItem.transform.SetParent(m_Content, false);
                 nextItem.gameObject.SetActive(true);
             }

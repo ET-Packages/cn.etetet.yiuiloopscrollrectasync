@@ -1166,9 +1166,12 @@ namespace UnityEngine.UI
             for (int i = 0; i < contentConstraintCount; i++)
             {
                 itemTypeStart--;
-                RectTransform newItem = await GetFromTempPool(itemTypeStart);
-                newItem.SetSiblingIndex(deletedItemTypeStart);
-                size = Mathf.Max(GetSize(newItem, includeSpacing), size);
+                var newItem = await GetFromTempPool(itemTypeStart);
+                if (newItem != null)
+                {
+                    newItem.SetSiblingIndex(deletedItemTypeStart);
+                    size = Mathf.Max(GetSize(newItem, includeSpacing), size);
+                }
             }
 
             threshold = Mathf.Max(threshold, size * 1.5f);
@@ -1247,13 +1250,16 @@ namespace UnityEngine.UI
             int count           = contentConstraintCount - (availableChilds % contentConstraintCount);
             for (int i = 0; i < count; i++)
             {
-                RectTransform newItem = await GetFromTempPool(itemTypeEnd);
-                newItem.SetSiblingIndex(m_Content.childCount - deletedItemTypeEnd - 1);
-                size = Mathf.Max(GetSize(newItem, includeSpacing), size);
-                itemTypeEnd++;
-                if (totalCount >= 0 && itemTypeEnd >= totalCount)
+                var newItem = await GetFromTempPool(itemTypeEnd);
+                if (newItem != null)
                 {
-                    break;
+                    newItem.SetSiblingIndex(m_Content.childCount - deletedItemTypeEnd - 1);
+                    size = Mathf.Max(GetSize(newItem, includeSpacing), size);
+                    itemTypeEnd++;
+                    if (totalCount >= 0 && itemTypeEnd >= totalCount)
+                    {
+                        break;
+                    } 
                 }
             }
 
