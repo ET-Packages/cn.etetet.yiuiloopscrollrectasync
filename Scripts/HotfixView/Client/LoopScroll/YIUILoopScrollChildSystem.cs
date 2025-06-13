@@ -46,7 +46,7 @@ namespace ET.Client
             self.m_ItemPool?.Clear((obj) => { ((Entity)obj)?.Parent?.Dispose(); });
             foreach (var code in self.m_BanLayerOptionForeverHashSet)
             {
-                YIUIMgrComponent.Inst?.RecoverLayerOptionForever(code);
+                self.YIUIMgr()?.RecoverLayerOptionForever(code);
             }
         }
 
@@ -58,21 +58,21 @@ namespace ET.Client
         {
             var data = YIUIBindHelper.GetBindVoByType(itemType);
             if (data == null) return;
-            self.m_Owner    = owner;
+            self.m_Owner = owner;
             self.m_ItemType = itemType;
             self.m_ItemTransformDic.Clear();
             self.m_ItemTransformIndexDic.Clear();
-            self.m_BindVo             = data.Value;
-            self.m_ItemPool           = new(self.OnCreateItemRenderer);
+            self.m_BindVo = data.Value;
+            self.m_ItemPool = new(self, self.OnCreateItemRenderer);
             self.m_Owner.prefabSource = self;
-            self.m_Owner.dataSource   = self;
+            self.m_Owner.dataSource = self;
 
             self.InitClearContent();
             self.InitCacheParent();
-            self.m_InvokeLoadInstantiate = new YIUIInvokeLoadInstantiateByVo
+            self.m_InvokeLoadInstantiate = new YIUIInvokeEntity_LoadInstantiateByVo
             {
-                BindVo          = self.m_BindVo,
-                ParentEntity    = self,
+                BindVo = self.m_BindVo,
+                ParentEntity = self,
                 ParentTransform = self.CacheRect,
             };
         }
@@ -85,7 +85,7 @@ namespace ET.Client
             }
             else
             {
-                var cacheObj  = new GameObject("Cache");
+                var cacheObj = new GameObject("Cache");
                 var cacheRect = cacheObj.GetOrAddComponent<RectTransform>();
                 self.m_Owner.u_CacheRect = cacheRect;
                 cacheRect.SetParent(self.m_Owner.transform, false);
@@ -137,7 +137,7 @@ namespace ET.Client
         private static async ETTask<EntityRef<Entity>> OnCreateItemRenderer(this YIUILoopScrollChild self)
         {
             EntityRef<YIUILoopScrollChild> selfRef = self;
-            var item = await EventSystem.Instance?.YIUIInvokeAsync<YIUIInvokeLoadInstantiateByVo, ETTask<Entity>>(self.m_InvokeLoadInstantiate);
+            var item = await EventSystem.Instance?.YIUIInvokeEntityAsync<YIUIInvokeEntity_LoadInstantiateByVo, ETTask<Entity>>(self, self.m_InvokeLoadInstantiate);
             self = selfRef;
             if (item == null)
             {
@@ -205,7 +205,7 @@ namespace ET.Client
             for (var i = 0; i < loadCount; i++)
             {
                 self = selfRef;
-                var item      = await self.m_ItemPool.Get();
+                var item = await self.m_ItemPool.Get();
                 var transform = ((Entity)item)?.GetParent<YIUIChild>()?.OwnerRectTransform;
                 if (transform != null)
                 {

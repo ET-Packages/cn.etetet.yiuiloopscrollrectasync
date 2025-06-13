@@ -22,9 +22,9 @@ namespace ET.Client
         {
             var tab = paramVo.Get<int>();
 
-            YIUIMgrComponent.Inst.Root
-                    .OpenPanelAsync<LoopScrollRectDemoPanelComponent, ELoopScrollRectDemoPanelViewEnum>((ELoopScrollRectDemoPanelViewEnum)tab)
-                    .NoContext();
+            clientScene.YIUIMgrRoot()
+                       .OpenPanelAsync<LoopScrollRectDemoPanelComponent, ELoopScrollRectDemoPanelViewEnum>((ELoopScrollRectDemoPanelViewEnum)tab)
+                       .NoContext();
 
             await ETTask.CompletedTask;
             return true;

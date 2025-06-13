@@ -122,7 +122,7 @@ namespace ET.Client
         private static long BanLayerOptionForever(this YIUILoopScrollChild self)
         {
             if (self.m_Owner.u_RefreshCanOption) return 0;
-            var code = YIUIMgrComponent.Inst.BanLayerOptionForever();
+            var code = self.YIUIMgr().BanLayerOptionForever();
             self.m_BanLayerOptionForeverHashSet.Add(code);
             return code;
         }
@@ -131,7 +131,7 @@ namespace ET.Client
         {
             if (code == 0) return;
             self.m_BanLayerOptionForeverHashSet.Remove(code);
-            YIUIMgrComponent.Inst.RecoverLayerOptionForever(code);
+            self.YIUIMgr().RecoverLayerOptionForever(code);
         }
     }
 }
