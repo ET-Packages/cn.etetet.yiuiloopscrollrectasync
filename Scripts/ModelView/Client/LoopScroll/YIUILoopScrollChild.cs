@@ -30,6 +30,7 @@ namespace ET.Client
         public Type m_ItemType;
         public Type m_LoopRendererSystemType;
         public Type m_LoopOnClickSystemType;
+        public Type m_LoopOnClickCheckSystemType;
 
         public ObjAsyncCache<EntityRef<Entity>> m_ItemPool;
         public Dictionary<Transform, EntityRef<Entity>> m_ItemTransformDic = new();
@@ -51,12 +52,14 @@ namespace ET.Client
                     m_DataType = m_DefaultDataType ?? m_Data[0].GetType();
                     m_LoopRendererSystemType = typeof(IYIUILoopRenderer<,,>).MakeGenericType(OwnerEntity?.GetType(), m_ItemType, m_DataType);
                     m_LoopOnClickSystemType = typeof(IYIUILoopOnClick<,,>).MakeGenericType(OwnerEntity?.GetType(), m_ItemType, m_DataType);
+                    m_LoopOnClickCheckSystemType = typeof(IYIUILoopOnClickCheck<,,>).MakeGenericType(OwnerEntity?.GetType(), m_ItemType, m_DataType);
                 }
                 else
                 {
                     m_DataType = null;
                     m_LoopRendererSystemType = null;
                     m_LoopOnClickSystemType = null;
+                    m_LoopOnClickCheckSystemType = null;
                 }
             }
         }

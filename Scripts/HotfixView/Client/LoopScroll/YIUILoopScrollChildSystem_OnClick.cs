@@ -36,6 +36,17 @@ namespace ET.Client
             self.m_OnClickItemHashSet.Clear();
         }
 
+        public static void SetOnClickCheck(this YIUILoopScrollChild self, bool value)
+        {
+            if (!self.m_OnClickInit)
+            {
+                Debug.LogError($"有Click 才可以有检查");
+                return;
+            }
+
+            self.m_ItemClickCheck = value;
+        }
+
         //动态改变 自动取消上一个选择的
         public static void ChangeAutoCancelLast(this YIUILoopScrollChild self, bool autoCancelLast)
         {
@@ -55,13 +66,32 @@ namespace ET.Client
             self.m_MaxClickCount = Mathf.Max(1, count);
         }
 
+        //点击前判断
+        private static bool OnClickCheck(this YIUILoopScrollChild self, int index, Entity item)
+        {
+            if (!self.m_OnClickInit) return false;
+
+            if (!self.m_ItemClickCheck) return true;
+
+            var select = !self.m_OnClickItemHashSet.Contains(index);
+
+            return YIUILoopHelper.OnClickCheck(self.m_LoopOnClickCheckSystemType, self.OwnerEntity, item, self.Data[index], index, select);
+        }
+
         //传入对象 选中目标
         public static void OnClickItem(this YIUILoopScrollChild self, Entity item)
         {
+            if (!self.m_OnClickInit) return;
+
             var index = self.GetItemIndex(item);
             if (index < 0)
             {
                 Debug.LogError($"无法选中一个不在显示中的对象");
+                return;
+            }
+
+            if (!self.OnClickCheck(index, item))
+            {
                 return;
             }
 
@@ -72,6 +102,8 @@ namespace ET.Client
         //传入索引 选中目标
         public static void OnClickItem(this YIUILoopScrollChild self, int index)
         {
+            if (!self.m_OnClickInit) return;
+
             if (index < 0 || index >= self.Data.Count)
             {
                 Debug.LogError($"点击 索引越界:[ {index} ] 限制范围[0 - {self.Data.Count}]");
@@ -79,6 +111,12 @@ namespace ET.Client
             }
 
             var item = self.GetItemByIndex(index, false);
+
+            if (!self.OnClickCheck(index, item))
+            {
+                return;
+            }
+
             var select = self.OnClickItemQueueEnqueue(index);
             if (item != null)
             {

@@ -237,6 +237,27 @@ namespace ET.Client
             YIUILoopHelper.Renderer(self.m_LoopRendererSystemType, self.OwnerEntity, item, self.Data[index], index, select);
         }
 
+        //原地刷新 重新触发一次可见的Item 时候数据变化 但是长度不变
+        //又不想全刷新也不想改变当前滑动位置,选中状态等等, 纯只刷新状态用
+        private static void UpdateRenderer(this YIUILoopScrollChild self, int index)
+        {
+            var item = self.GetItemByIndex(index);
+            if (item == null)
+            {
+                Debug.LogError($"没有找到 {index} 对应的item");
+                return;
+            }
+
+            var select = self.m_OnClickItemHashSet.Contains(index);
+            if (self.Data == null)
+            {
+                Debug.LogError($"{self.Parent.GetType().Name} {self.m_Owner.name}当前没有设定数据 m_Data == null");
+                return;
+            }
+
+            YIUILoopHelper.Renderer(self.m_LoopRendererSystemType, self.OwnerEntity, item, self.Data[index], index, select);
+        }
+
         #endregion
 
         #region EntitySystem

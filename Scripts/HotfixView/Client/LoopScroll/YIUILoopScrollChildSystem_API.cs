@@ -137,6 +137,44 @@ namespace ET.Client
             return listData;
         }
 
+        //就获取目前显示的这几个
+        public static List<T> GetShowItem<T>(this YIUILoopScrollChild self) where T : Entity
+        {
+            var listItem = new List<T>();
+            if (self.Data == null)
+            {
+                Log.Error($"数据为空 请先设置数据");
+                return listItem;
+            }
+
+            for (var i = self.ItemStart; i < self.ItemEnd; i++)
+            {
+                var item = self.GetItemByIndex(i);
+                if (item is T target)
+                {
+                    listItem.Add(target);
+                }
+            }
+
+            return listItem;
+        }
+
+        //原地刷新 重新触发一次可见的Item 时候数据变化 但是长度不变
+        //又不想全刷新也不想改变当前滑动位置,选中状态等等, 纯只刷新状态用
+        public static void ReRenderer(this YIUILoopScrollChild self)
+        {
+            if (self.Data == null)
+            {
+                Log.Error($"数据为空 请先设置数据");
+                return;
+            }
+
+            for (var i = self.ItemStart; i < self.ItemEnd; i++)
+            {
+                self.UpdateRenderer(i);
+            }
+        }
+
         #region 点击相关 获取被选中目标..
 
         //reset=吧之前选择的都取消掉 讲道理应该都是true
