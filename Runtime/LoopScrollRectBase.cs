@@ -888,7 +888,7 @@ namespace UnityEngine.UI
 
             while (needMoving)
             {
-                await ET.EventSystem.Instance?.YIUIInvokeEntityAsync<YIUIInvokeEntity_WaitFrameAsync, ETTask>(YIUISingletonHelper.YIUIMgr, m_WaitFrameAsync);
+                await ET.EventSystem.Instance?.YIUIInvokeEntityAsyncSafety<YIUIInvokeEntity_WaitFrameAsync, ETTask>(YIUISingletonHelper.YIUIMgr, m_WaitFrameAsync);
 
                 if (!m_Dragging)
                 {
@@ -2200,7 +2200,7 @@ namespace UnityEngine.UI
         {
             if (m_Content == null) return;
 
-            using var coroutineLock = await ET.EventSystem.Instance.YIUIInvokeEntityAsync<YIUIInvokeEntity_CoroutineLock, ETTask<Entity>>(YIUISingletonHelper.YIUIMgr, new YIUIInvokeEntity_CoroutineLock { Lock = this.GetHashCode() });
+            using var coroutineLock = await ET.EventSystem.Instance.YIUIInvokeEntityAsyncSafety<YIUIInvokeEntity_CoroutineLock, ETTask<Entity>>(YIUISingletonHelper.YIUIMgr, new YIUIInvokeEntity_CoroutineLock { Lock = this.GetHashCode() });
 
             m_ViewBounds = new Bounds(viewRect.rect.center, viewRect.rect.size);
             m_ContentBounds = GetBounds();
