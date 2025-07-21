@@ -45,8 +45,7 @@ namespace UnityEngine.UI
     {
         public static void ProvideData(this IYIUILoopScrollDataSource source, Transform transform, int idx)
         {
-            var iEventSystems =
-                    EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollDataSourceSystem));
+            var iEventSystems = EntitySystemSingleton.Instance.TypeSystems.GetSystems(source.GetType(), typeof(IYIUILoopScrollDataSourceSystem));
             if (iEventSystems is not { Count: > 0 })
             {
                 Log.Error($"类:{source.GetType()} 没有具体实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
@@ -63,10 +62,9 @@ namespace UnityEngine.UI
                 catch (Exception e)
                 {
                     Log.Error($"类:{source.GetType()} 事件错误: {e.Message}");
+                    return;
                 }
             }
-
-            Log.Error($"类:{source.GetType()} 存在多个实现的事件 IYIUILoopScrollPrefabAsyncSourceSystem 请检查");
         }
     }
 }
