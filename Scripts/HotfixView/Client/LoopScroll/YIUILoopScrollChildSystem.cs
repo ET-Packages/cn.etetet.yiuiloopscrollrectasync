@@ -56,7 +56,7 @@ namespace ET.Client
 
         public static void Initialize(this YIUILoopScrollChild self, LoopScrollRect owner, Type itemType)
         {
-            var data = YIUIBindHelper.GetBindVoByType(itemType);
+            var data = self.YIUIBind().GetBindVoByType(itemType);
             if (data == null) return;
             self.m_Owner = owner;
             self.m_ItemType = itemType;
