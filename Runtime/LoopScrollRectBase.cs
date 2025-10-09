@@ -2200,7 +2200,7 @@ namespace UnityEngine.UI
         {
             if (m_Content == null) return;
 
-            using var coroutineLock = await ET.EventSystem.Instance.YIUIInvokeEntityAsyncSafety<YIUIInvokeEntity_CoroutineLock, ETTask<Entity>>(YIUISingletonHelper.YIUIMgr, new YIUIInvokeEntity_CoroutineLock { Lock = this.GetHashCode() });
+            using var _ = await ET.EventSystem.Instance.YIUIInvokeEntityAsyncSafety<YIUIInvokeEntity_CoroutineLock, ETTask<Entity>>(YIUISingletonHelper.YIUIMgr, new YIUIInvokeEntity_CoroutineLock { Lock = this.GetHashCode() });
 
             m_ViewBounds = new Bounds(viewRect.rect.center, viewRect.rect.size);
             m_ContentBounds = GetBounds();

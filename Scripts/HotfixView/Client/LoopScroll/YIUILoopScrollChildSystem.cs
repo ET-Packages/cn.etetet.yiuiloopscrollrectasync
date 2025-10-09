@@ -196,7 +196,7 @@ namespace ET.Client
         public static async ETTask PreLoadAsync(this YIUILoopScrollChild self, int count)
         {
             EntityRef<YIUILoopScrollChild> selfRef = self;
-            using var coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.YIUIFramework, self.GetHashCode());
+            using var _ = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.YIUIFramework, self.GetHashCode());
             self = selfRef;
             var loadCount = count - self.m_ItemPool.Count;
             if (loadCount <= 0) return;
