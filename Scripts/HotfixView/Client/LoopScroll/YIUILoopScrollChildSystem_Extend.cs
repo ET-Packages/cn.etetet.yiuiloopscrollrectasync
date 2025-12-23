@@ -13,6 +13,7 @@ namespace ET.Client
         //在开始时用startItem填充单元格，同时清除现有的单元格
         public static async ETTask RefillCells(this YIUILoopScrollChild self, int startItem = 0, float contentOffset = 0)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var code = self.BanLayerOptionForever();
             self.SyncPoolCreateInterval(true);
             try
@@ -25,6 +26,7 @@ namespace ET.Client
             }
             finally
             {
+                self = selfRef;
                 self.SyncPoolCreateInterval(false);
                 self.RecoverLayerOptionForever(code); 
             }
@@ -33,6 +35,7 @@ namespace ET.Client
         //在结束时重新填充endItem中的单元格，同时清除现有的单元格
         public static async ETTask RefillCellsFromEnd(this YIUILoopScrollChild self, int endItem = 0, bool alignStart = false)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var code = self.BanLayerOptionForever();
             self.SyncPoolCreateInterval(true);
             try
@@ -45,6 +48,7 @@ namespace ET.Client
             }
             finally
             {
+                self = selfRef;
                 self.SyncPoolCreateInterval(false);
                 self.RecoverLayerOptionForever(code); 
             }
@@ -52,6 +56,7 @@ namespace ET.Client
 
         public static async ETTask RefreshCells(this YIUILoopScrollChild self)
         {
+            EntityRef<YIUILoopScrollChild> selfRef = self;
             var code = self.BanLayerOptionForever();
             self.SyncPoolCreateInterval(true);
             try
@@ -64,6 +69,7 @@ namespace ET.Client
             }
             finally
             {
+                self = selfRef;
                 self.SyncPoolCreateInterval(false);
                 self.RecoverLayerOptionForever(code); 
             }
